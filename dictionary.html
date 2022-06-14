@@ -41,7 +41,7 @@
 
 
           <table class="table table-bordered" style="max-width: 800px;margin: 0 auto; margin-top: 40px;">
-            <thead>
+            <thead id="myTableHead">
               <tr>
                   <th>Tarifit</th>
                   <th>Nederlands</th>
@@ -56,7 +56,4872 @@
 
 <script type="application/javascript">
 
+function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0)
+        costs[j] = j;
+      else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0)
+      costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+function similarity(s1, s2) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength == 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
 let dic = {
+    "no-root": [
+        {
+            "rif": [
+                "adrar n lqamet",
+                "lqamet",
+                "adrar",
+                "Adrar n Lqamet"
+            ],
+            "nl": [
+                "jbel el qama",
+                "el qama",
+                "qama"
+            ]
+        },
+        {
+            "rif": [
+                "aglinzi",
+                "weglinzi",
+                "iglinziyen",
+                "Aglinzi [We] / Iglinziyen"
+            ],
+            "nl": [
+                "engels",
+                "engelsman"
+            ]
+        },
+        {
+            "rif": [
+                "agraf",
+                "Agraf n ṭiyyarat n tɛessast n tcurfit"
+            ],
+            "nl": [
+                "la garde chérifienne",
+                "garde chérifienne",
+                "chérifienne",
+                "ṭiyyarat"
+            ]
+        },
+        {
+            "rif": [
+                "budra",
+                "aḥmed budra",
+                "aketcum",
+                "aḥmed budra aketcum",
+                "Aḥmed Budra Aketcum"
+            ],
+            "nl": [
+                "Ahmed Boudra",
+                "Ahmad Boudra",
+                "Boudra",
+                "Budra"
+            ]
+        },
+        {
+            "rif": [
+                "ajiyuluji",
+                "ujiyuluji",
+                "ijiyulujiyen",
+                "ajiyuluji [u-] / ijiyulujiyen"
+            ],
+            "nl": [
+                "geologisch",
+                "geoloog"
+            ]
+        },
+        {
+            "rif": [
+                "akamiyyun",
+                "ukamiyyun",
+                "ikumiyya",
+                "ikamiyyunen",
+                "akamiyyun [u-] / ikumiyya, ikamiyyunen"
+            ],
+            "nl": [
+                "vrachtwagen",
+                "wagen"
+            ]
+        },
+        {
+            "rif": [
+                "alxisiras",
+                "Alxisiras"
+            ],
+            "nl": [
+                "algeciras"
+            ]
+        },
+        {
+            "rif": [
+                "amarical",
+                "umarical",
+                "imaricalen",
+                "amarical [u-] / imaricalen"
+            ],
+            "nl": [
+                "maarschalk"
+            ]
+        },
+        {
+            "rif": [
+                "amarikan",
+                "umarikan",
+                "Amarikan [U-]"
+            ],
+            "nl": [
+                "amerika",
+                "verenigde staten",
+                "vs",
+                "v.s.",
+                "de verenigde staten"
+            ]
+        },
+        {
+            "rif": [
+                "amezduɣ ameqran",
+                "amezduɣ",
+                "umezduɣ",
+                "amezduɣ ameqran"
+            ],
+            "nl": [
+                "resident-generaal",
+                "resident"
+            ]
+        },
+        {
+            "rif": [
+                "amurrakuci",
+                "umurrakuci",
+                "Imurrakuciyen",
+                "Amurrakuci [U-] / Imurrakuciyen"
+            ],
+            "nl": [
+                "marokkaan",
+                "marokkaans"
+            ]
+        },
+        {
+            "rif": [
+                "arcif",
+                "arcifat",
+                "arcif / arcifat"
+            ],
+            "nl": [
+                "archief"
+            ]
+        },
+        {
+            "rif": [
+                "arripublik",
+                "arripublikat",
+                "arripublik / arripublikat"
+            ],
+            "nl": [
+                "republiek"
+            ]
+        },
+        {
+            "rif": [
+                "aruppawi",
+                "aruppawi",
+                "iruppawiyen",
+                "Aruppawi [U-]/ Iruppawiyen"
+            ],
+            "nl": [
+                "europees",
+                "europeaan"
+            ]
+        },
+        {
+            "rif": [
+                "Ayt lexdayem",
+                "lexdayem",
+                "Ayt lexdayem"
+            ],
+            "nl": [
+                "ambachtslieden"
+            ]
+        },
+        {
+            "rif": [
+                "ayt ttijara",
+                "ttijara",
+                "ayt ttijara"
+            ],
+            "nl": [
+                "handelaren",
+                "handelslieden",
+                "handelaar"
+            ]
+        },
+        {
+            "rif": [
+                "cḥal tsaɛet?",
+                "cḥal tsaɛet",
+                "cḥal",
+                "tsaɛet",
+                "Cḥal tsaɛet?"
+            ],
+            "nl": [
+                "Hoe laat is het?",
+                "Hoe laat is het",
+                "Hoe laat?",
+                "tijd"
+            ]
+        },
+        {
+            "rif": [
+                "dhar dbarran",
+                "abarran",
+                "Dhar Ubarran"
+            ],
+            "nl": [
+                "dhar dbarran",
+                "abarran"
+            ]
+        },
+        {
+            "rif": [
+                "el telegrama del rif",
+                "telegrama del rif",
+                "telegrama",
+                "el Telegrama del Rif"
+            ],
+            "nl": [
+                "el telegrama del rif",
+                "telegrama del rif",
+                "krant"
+            ]
+        },
+        {
+            "rif": [
+                "falṭa",
+                "falṭat",
+                "falṭa / falṭat"
+            ],
+            "nl": [
+                "fout"
+            ]
+        },
+        {
+            "rif": [
+                "filu",
+                "ifilan",
+                "filu [u-] / ifilan"
+            ],
+            "nl": [
+                "draad",
+                "link"
+            ]
+        },
+        {
+            "rif": [
+                "girra",
+                "girrat",
+                "girra / girrat"
+            ],
+            "nl": [
+                "oorlog"
+            ]
+        },
+        {
+            "rif": [
+                "inglatirra",
+                "Inglatirra"
+            ],
+            "nl": [
+                "engeland",
+                "england"
+            ]
+        },
+        {
+            "rif": [
+                "iṭalya",
+                "Iṭalya"
+            ],
+            "nl": [
+                "italië"
+            ]
+        },
+        {
+            "rif": [
+                "kuntra",
+                "kuntra"
+            ],
+            "nl": [
+                "tegen"
+            ]
+        },
+        {
+            "rif": [
+                "lbumbet",
+                "lbumbat",
+                "lbumbet / lbumbat"
+            ],
+            "nl": [
+                "bom"
+            ]
+        },
+        {
+            "rif": [
+                "lqunṣuliyya",
+                "lqunṣuliyyat",
+                "lqunṣuliyya / lqunṣuliyyat"
+            ],
+            "nl": [
+                "consulaat"
+            ]
+        },
+        {
+            "rif": [
+                "m’ḥemmed",
+                "mḥemmed",
+                "M’ḥemmed"
+            ],
+            "nl": [
+                "emhemmed",
+                "mhemmed"
+            ]
+        },
+        {
+            "rif": [
+                "n llilet",
+                "llilet",
+                "n llilet"
+            ],
+            "nl": [
+                "’s avonds",
+                "’s nachts",
+                "avond",
+                "nacht"
+            ]
+        },
+        {
+            "rif": [
+                "s yisem n",
+                "yisem",
+                "isem",
+                "s yisem n"
+            ],
+            "nl": [
+                "in de naam van",
+                "naam"
+            ]
+        },
+        {
+            "rif": [
+                "sidi mesɛud",
+                "mesɛud",
+                "sidi",
+                "Sidi Mesɛud"
+            ],
+            "nl": [
+                "sidi messaoud",
+                "messaoud",
+                "sidi"
+            ]
+        },
+        {
+            "rif": [
+                "Silvestre",
+                "Silvestre"
+            ],
+            "nl": [
+                "Silvestre"
+            ]
+        },
+        {
+            "rif": [
+                "yestetmar",
+                "stetmar",
+                "stetmar / stetmar / stetmar"
+            ],
+            "nl": [
+                "investeren"
+            ]
+        },
+        {
+            "rif": [
+                "tadiplumasit",
+                "tdiplumasit",
+                "tadiplumasit [td-]"
+            ],
+            "nl": [
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        },
+        {
+            "rif": [
+                "diplomatie",
+                "27",
+                null
+            ],
+            "nl": [
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        },
+        {
+            "rif": [
+                "tajuɣrafit",
+                "tjuɣrafit",
+                "tajuɣrafit [tj-]"
+            ],
+            "nl": [
+                "geografie",
+                "aardrijkskunde"
+            ]
+        },
+        {
+            "rif": [
+                "tamzida n lqarawiyyin",
+                "lqarawiyyin",
+                "tamzida",
+                "Tamzida n Lqarawiyyin"
+            ],
+            "nl": [
+                "Université Al Quaraouiyine",
+                "Al Quaraouiyine",
+                "Quaraouiyine",
+                "Al-Qarawiyyin",
+                "Qarawiyyin"
+            ]
+        },
+        {
+            "rif": [
+                "tilellit",
+                "tlellit",
+                "tilelliyin",
+                "tlelliyin",
+                "tilellit [tl-] / tilelliyin [tl-]"
+            ],
+            "nl": [
+                "vrij",
+                "onafhankelijk"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭef abrid",
+                "ṭṭef",
+                "abrid",
+                "iṭṭef",
+                "ṭṭef abrid"
+            ],
+            "nl": [
+                "onderweg zijn",
+                "onderweg"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭef abrid n tarewliwin",
+                "ṭṭef abrid",
+                "tarewliwin",
+                "ṭṭef",
+                "abrid",
+                "ṭṭef abrid n tarewliwin"
+            ],
+            "nl": [
+                "vluchten"
+            ]
+        },
+        {
+            "rif": [
+                "yussef alawi",
+                "yussef",
+                "alawi",
+                "Yussef Alawi"
+            ],
+            "nl": [
+                "Youssef ben Hassan",
+                "youssef",
+                "ben hassan",
+                "alawieten",
+                "sultan"
+            ]
+        },
+        {
+            "rif": [
+                "a",
+                "-a"
+            ],
+            "nl": [
+                "deze",
+                "dit",
+                "die",
+                "dat"
+            ]
+        },
+        {
+            "rif": [
+                "abril",
+                "abril"
+            ],
+            "nl": [
+                "april"
+            ]
+        },
+        {
+            "rif": [
+                "aburtuɣali",
+                "uburtuɣali",
+                "iburtuɣaliyen",
+                "Aburtuɣali [u-] / Iburtuɣaliyen"
+            ],
+            "nl": [
+                "portugees"
+            ]
+        },
+        {
+            "rif": [
+                "lxir",
+                "Ad ikemmel arebbi s lxir"
+            ],
+            "nl": [
+                "voorspoed"
+            ]
+        },
+        {
+            "rif": [
+                "nican",
+                "ad temqabal nican"
+            ],
+            "nl": [
+                "goed"
+            ]
+        },
+        {
+            "rif": [
+                "afaylasuf",
+                "ufaylasuf",
+                "lfaylasuf",
+                "ifaylasufen",
+                "lflasifa",
+                "afaylasuf [u-], lfaylasuf / ifaylasufen, lflasifa"
+            ],
+            "nl": [
+                "filosoof"
+            ]
+        },
+        {
+            "rif": [
+                "afransiskan",
+                "ufransiskan",
+                "ifransiskanen",
+                "afransiskan [u-] / ifransiskanen"
+            ],
+            "nl": [
+                "fransiscaan"
+            ]
+        },
+        {
+            "rif": [
+                "tmeddit",
+                "ag tmeddit"
+            ],
+            "nl": [
+                "avond",
+                "‘s avonds"
+            ]
+        },
+        {
+            "rif": [
+                "aɣ",
+                "aɣ-ak"
+            ],
+            "nl": [
+                "neem"
+            ]
+        },
+        {
+            "rif": [
+                "asemmam",
+                "aɣi asemmam"
+            ],
+            "nl": [
+                "karnemelk"
+            ]
+        },
+        {
+            "rif": [
+                "aɣlabiyya",
+                "aɣlabiyya"
+            ],
+            "nl": [
+                "meerderheid"
+            ]
+        },
+        {
+            "rif": [
+                "Ahḷan",
+                "Ahḷan!"
+            ],
+            "nl": [
+                "hallo",
+                "goedendan",
+                "goeiedag",
+                "dag"
+            ]
+        },
+        {
+            "rif": [
+                "ahuḷandi",
+                "ihulandiyen",
+                "ahulandi / ihulandiyen"
+            ],
+            "nl": [
+                "nederlands",
+                "nederlander",
+                "hollander",
+                "hollands"
+            ]
+        },
+        {
+            "rif": [
+                "ajartil",
+                "ujartil",
+                "ijartal",
+                "ajartil [uj-] / ijartal"
+            ],
+            "nl": [
+                "mat",
+                "riet"
+            ]
+        },
+        {
+            "rif": [
+                "ajiniral",
+                "ujiniral",
+                "ijiniralen",
+                "ajiniral [u-] / ijiniralen"
+            ],
+            "nl": [
+                "generaal"
+            ]
+        },
+        {
+            "rif": [
+                "ajurnalist",
+                "ujurnalist",
+                "ijurnalisen",
+                "ajurnalist [u-] / ijurnalisen"
+            ],
+            "nl": [
+                "journalist",
+                "verslaggever"
+            ]
+        },
+        {
+            "rif": [
+                "akimawi",
+                "akimawi"
+            ],
+            "nl": [
+                "chemisch"
+            ]
+        },
+        {
+            "rif": [
+                "al uneggaru"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "alef",
+                "walef",
+                "luluf",
+                "alef [w-] / luluf"
+            ],
+            "nl": [
+                "duizend"
+            ]
+        },
+        {
+            "rif": [
+                "aliman",
+                "uliman",
+                "ilimaniyen",
+                "aliman [u-] / ilimaniyen"
+            ],
+            "nl": [
+                "duits",
+                "duitser"
+            ]
+        },
+        {
+            "rif": [
+                "amɣar",
+                "imɣaren",
+                "amɣar / imɣaren"
+            ],
+            "nl": [
+                "stamhoofd",
+                "dorpshoofd",
+                "schoonvader",
+                "hoofd"
+            ]
+        },
+        {
+            "rif": [
+                "amɣar",
+                "amɣar n temdint"
+            ],
+            "nl": [
+                "burgemeester"
+            ]
+        },
+        {
+            "rif": [
+                "amirika",
+                "Amirika [A-]"
+            ],
+            "nl": [
+                "amerika"
+            ]
+        },
+        {
+            "rif": [
+                "amirikan",
+                "umirikan",
+                "imirikaniyen",
+                "Amirikan [U-] / Imirikaniyen"
+            ],
+            "nl": [
+                "amerikaans",
+                "amerikanen",
+                "amerika"
+            ]
+        },
+        {
+            "rif": [
+                "amkan",
+                "wemkan",
+                "imukan",
+                "amkan [we-] / imukan"
+            ],
+            "nl": [
+                "plaats",
+                "plek"
+            ]
+        },
+        {
+            "rif": [
+                "amur",
+                "wakuc",
+                "Amur n Wakuc"
+            ],
+            "nl": [
+                "god",
+                "land"
+            ]
+        },
+        {
+            "rif": [
+                "amurrakuc",
+                "Amurrakuc "
+            ],
+            "nl": [
+                "marrakech",
+                "marokko"
+            ]
+        },
+        {
+            "rif": [
+                "andalusya",
+                "Andalusya"
+            ],
+            "nl": [
+                "Andalusië"
+            ]
+        },
+        {
+            "rif": [
+                "antayus",
+                "Antayus"
+            ],
+            "nl": [
+                "antaios"
+            ]
+        },
+        {
+            "rif": [
+                "apiluṭ",
+                "upiluṭ",
+                "ipiluṭen",
+                "apiluṭ [u-] / ipiluṭen"
+            ],
+            "nl": [
+                "piloot"
+            ]
+        },
+        {
+            "rif": [
+                "apulis",
+                "ipulisen",
+                "apulis / ipulisen"
+            ],
+            "nl": [
+                "politieagent",
+                "politie",
+                "agent"
+            ]
+        },
+        {
+            "rif": [
+                "aqeṭṭaɛ",
+                "uqeṭṭaɛ",
+                "iqeṭṭaɛen",
+                "webrid",
+                "aqeṭṭaɛ n webrid"
+            ],
+            "nl": [
+                "struikrover"
+            ]
+        },
+        {
+            "rif": [
+                "araḥ",
+                "Araḥ dd!"
+            ],
+            "nl": [
+                "kom",
+                "hier"
+            ]
+        },
+        {
+            "rif": [
+                "arbeɛṭac",
+                "arbeɛṭac"
+            ],
+            "nl": [
+                "veertien"
+            ]
+        },
+        {
+            "rif": [
+                "arbeɛṭac",
+                "arbeɛṭac"
+            ],
+            "nl": [
+                "veertien"
+            ]
+        },
+        {
+            "rif": [
+                "arbɛin",
+                "arbɛin"
+            ],
+            "nl": [
+                "veertig"
+            ]
+        },
+        {
+            "rif": [
+                "arhaj",
+                "arhaj"
+            ],
+            "nl": [
+                "gas"
+            ]
+        },
+        {
+            "rif": [
+                "arisṭu",
+                "arisṭut",
+                "arisṭu / arisṭut"
+            ],
+            "nl": [
+                "restaurant"
+            ]
+        },
+        {
+            "rif": [
+                "arradyu",
+                "arradyawat",
+                "arradyu / arradyawat"
+            ],
+            "nl": [
+                "radio"
+            ]
+        },
+        {
+            "rif": [
+                "artista",
+                "artistat",
+                "artista / artistat"
+            ],
+            "nl": [
+                "artiest"
+            ]
+        },
+        {
+            "rif": [
+                "arumi",
+                "urumi",
+                "irumiyen",
+                "arumi [u-] / irumiyen"
+            ],
+            "nl": [
+                "europeaan"
+            ]
+        },
+        {
+            "rif": [
+                "asefru",
+                "usefru",
+                "asefru [u-] / isefra"
+            ],
+            "nl": [
+                "poëzie"
+            ]
+        },
+        {
+            "rif": [
+                "aseggwas",
+                "iqebbaren",
+                "aseggwas n iqebbaren"
+            ],
+            "nl": [
+                "opstand"
+            ]
+        },
+        {
+            "rif": [
+                "aseggwas",
+                "tfaḍist",
+                "aseggwas n tfaḍist"
+            ],
+            "nl": [
+                "opstand"
+            ]
+        },
+        {
+            "rif": [
+                "aspanyu",
+                "uspanyu",
+                "ispunya",
+                "Aspanyu [we] / ispunya"
+            ],
+            "nl": [
+                "spaans",
+                "spanjaard"
+            ]
+        },
+        {
+            "rif": [
+                "asugur",
+                "usugur",
+                "asugur [u-]"
+            ],
+            "nl": [
+                "bestuur"
+            ]
+        },
+        {
+            "rif": [
+                "atay",
+                "watay",
+                "atay [w-]"
+            ],
+            "nl": [
+                "thee"
+            ]
+        },
+        {
+            "rif": [
+                "atay",
+                "nneɛneɛ",
+                "atay s nneɛneɛ"
+            ],
+            "nl": [
+                "muntthee"
+            ]
+        },
+        {
+            "rif": [
+                "aṭlantik",
+                "lebḥar",
+                "Aṭlantik (lebḥar n)"
+            ],
+            "nl": [
+                "atlantisch",
+                "atlantische",
+                "oceaan"
+            ]
+        },
+        {
+            "rif": [
+                "aṭlas",
+                "amerwasi",
+                "Aṭlas Amerwasi"
+            ],
+            "nl": [
+                "atlas"
+            ]
+        },
+        {
+            "rif": [
+                "awras",
+                "Awras"
+            ],
+            "nl": [
+                "aurès",
+                "aures",
+                "awras"
+            ]
+        },
+        {
+            "rif": [
+                "axxam",
+                "ssḍeḥ",
+                "axxam n ssḍeḥ [we-] / ixxamen n ssḍeḥ"
+            ],
+            "nl": [
+                "zolderkamer",
+                "zolder"
+            ]
+        },
+        {
+            "rif": [
+                "aydud",
+                "ameqran",
+                "aydud ameqran"
+            ],
+            "nl": [
+                "publiek",
+                "breed"
+            ]
+        },
+        {
+            "rif": [
+                "ayt bufraḥ",
+                "bufraḥ",
+                "Ayt Bufraḥ"
+            ],
+            "nl": [
+                "ayt boufrah",
+                "boufrah",
+                "ait boufrah"
+            ]
+        },
+        {
+            "rif": [
+                "ayt znasen",
+                "iznasen",
+                "Ayt Iznasen"
+            ],
+            "nl": [
+                "ayt iznasen",
+                "Iznasen",
+                "ait iznasen"
+            ]
+        },
+        {
+            "rif": [
+                "ayt tuzin",
+                "tuzin",
+                "Ayt Tuzin"
+            ],
+            "nl": [
+                "ayt tuzin",
+                "tuzin",
+                "touzin",
+                "ait touzin"
+            ]
+        },
+        {
+            "rif": [
+                "waryaɣel",
+                "Ayt Waryaɣel "
+            ],
+            "nl": [
+                "ait ouriaghel",
+                "ouriaghel",
+                "ait waryaghar",
+                "waryaghar"
+            ]
+        },
+        {
+            "rif": [
+                "ayyaw",
+                "ayyawen",
+                "ayyaw [wa-] / ayyawen [wa-]"
+            ],
+            "nl": [
+                "neef",
+                "kleinzoon"
+            ]
+        },
+        {
+            "rif": [
+                "azdad",
+                "wezdad",
+                "izdaden",
+                "azdad [we-] / izdaden"
+            ],
+            "nl": [
+                "dun",
+                "spirant"
+            ]
+        },
+        {
+            "rif": [
+                "baba",
+                "baba"
+            ],
+            "nl": [
+                "vader"
+            ]
+        },
+        {
+            "rif": [
+                "baba",
+                "ameqran",
+                "baba ameqran"
+            ],
+            "nl": [
+                "grootvader",
+                "opa"
+            ]
+        },
+        {
+            "rif": [
+                "baceklit",
+                "baceklitat",
+                "baceklit / baceklitat (vr.)"
+            ],
+            "nl": [
+                "fiets"
+            ]
+        },
+        {
+            "rif": [
+                "bandu",
+                "ubandu",
+                "ibanduten",
+                "bandu [u-] / ibanduten"
+            ],
+            "nl": [
+                "vlag"
+            ]
+        },
+        {
+            "rif": [
+                "bariyyu",
+                "bariyyut",
+                "bariyyu / bariyyut"
+            ],
+            "nl": [
+                "buurt"
+            ]
+        },
+        {
+            "rif": [
+                "bezzaf",
+                "zegwami",
+                "bezzaf zegwami"
+            ],
+            "nl": [
+                "geleden",
+                "lang geleden"
+            ]
+        },
+        {
+            "rif": [
+                "biljik",
+                "Biljik"
+            ],
+            "nl": [
+                "belgië"
+            ]
+        },
+        {
+            "rif": [
+                "bjaya",
+                "Bjaya"
+            ],
+            "nl": [
+                "bejaia"
+            ]
+        },
+        {
+            "rif": [
+                "bla",
+                "bla"
+            ],
+            "nl": [
+                "zonder"
+            ]
+        },
+        {
+            "rif": [
+                "aceffay",
+                "bla (y)aceffay (de y wordt niet geschreven)"
+            ],
+            "nl": [
+                "melk"
+            ]
+        },
+        {
+            "rif": [
+                "bla",
+                "bla ma"
+            ],
+            "nl": [
+                "zonder",
+                "zonder dat"
+            ]
+        },
+        {
+            "rif": [
+                "ssukar",
+                "bla ssukar"
+            ],
+            "nl": [
+                "suiker"
+            ]
+        },
+        {
+            "rif": [
+                "bnadem",
+                "iwdan",
+                "bnadem / iwdan"
+            ],
+            "nl": [
+                "mens"
+            ]
+        },
+        {
+            "rif": [
+                "bruksil",
+                "Bruksil"
+            ],
+            "nl": [
+                "brussel"
+            ]
+        },
+        {
+            "rif": [
+                "bumbiyya",
+                "bumbiyyat",
+                "bumbiyya / bumbiyyat (v.)"
+            ],
+            "nl": [
+                "lamp"
+            ]
+        },
+        {
+            "rif": [
+                "buqrunis",
+                "buqrunis"
+            ],
+            "nl": [
+                "ansjovis"
+            ]
+        },
+        {
+            "rif": [
+                "burkinafasu",
+                "Burkinafasu"
+            ],
+            "nl": [
+                "burkina faso"
+            ]
+        },
+        {
+            "rif": [
+                "busaydun",
+                "Busaydun"
+            ],
+            "nl": [
+                "poseidon"
+            ]
+        },
+        {
+            "rif": [
+                "busekkur",
+                "Busekkur"
+            ],
+            "nl": [
+                "bousekour"
+            ]
+        },
+        {
+            "rif": [
+                "cala Iris",
+                "cala ",
+                "iris",
+                "Cala Iris"
+            ],
+            "nl": [
+                "cala iris"
+            ]
+        },
+        {
+            "rif": [
+                "ccaf",
+                "ccifan",
+                "ccaf / ccifan"
+            ],
+            "nl": [
+                "hoofd"
+            ]
+        },
+        {
+            "rif": [
+                "cḥal",
+                "zegwami",
+                "cḥal zegwami"
+            ],
+            "nl": [
+                "hoelang",
+                "sinds"
+            ]
+        },
+        {
+            "rif": [
+                "ci",
+                "ijjen",
+                "ci n ijjen"
+            ],
+            "nl": [
+                "iemand"
+            ]
+        },
+        {
+            "rif": [
+                "ci",
+                "twala",
+                "ci n twala"
+            ],
+            "nl": [
+                "ooit"
+            ]
+        },
+        {
+            "rif": [
+                "cicunq",
+                "Cicunq"
+            ],
+            "nl": [
+                "sjosjenq",
+                "sisak"
+            ]
+        },
+        {
+            "rif": [
+                "ciḥaja",
+                "ciḥaja"
+            ],
+            "nl": [
+                "beetje",
+                "weinig",
+                "enigszins",
+                "tamelijk"
+            ]
+        },
+        {
+            "rif": [
+                "claḍa",
+                "claḍa"
+            ],
+            "nl": [
+                "salade",
+                "sla"
+            ]
+        },
+        {
+            "rif": [
+                "cukran",
+                "cukran"
+            ],
+            "nl": [
+                "bedankt"
+            ]
+        },
+        {
+            "rif": [
+                "icuqq",
+                "cuqq",
+                "ttcuqq",
+                "cuqq / cuqq / ttcuqq"
+            ],
+            "nl": [
+                "doorkruisen"
+            ]
+        },
+        {
+            "rif": [
+                "cutenbir",
+                "cutenbir"
+            ],
+            "nl": [
+                "september"
+            ]
+        },
+        {
+            "rif": [
+                "cway",
+                "cway cway"
+            ],
+            "nl": [
+                "rustig",
+                "langzaam"
+            ]
+        },
+        {
+            "rif": [
+                "David Hart"
+            ],
+            "nl": [
+                "david montgomery hart",
+                "david hart",
+                "hart"
+            ]
+        },
+        {
+            "rif": [
+                "dd",
+                "dd"
+            ],
+            "nl": [
+                "richting"
+            ]
+        },
+        {
+            "rif": [
+                "ddeftar",
+                "ddfatar",
+                "ddeftar / ddfatar"
+            ],
+            "nl": [
+                "schrift"
+            ]
+        },
+        {
+            "rif": [
+                "ddelaḥ",
+                "ddelaḥ"
+            ],
+            "nl": [
+                "watermeloen",
+                "meloen"
+            ]
+        },
+        {
+            "rif": [
+                "ddemɛun",
+                "ddemɛun"
+            ],
+            "nl": [
+                "verkoudheid",
+                "vekouden"
+            ]
+        },
+        {
+            "rif": [
+                "ddenya",
+                "ddenya"
+            ],
+            "nl": [
+                "wereld"
+            ]
+        },
+        {
+            "rif": [
+                "ddustur",
+                "ddustur"
+            ],
+            "nl": [
+                "grondwet"
+            ]
+        },
+        {
+            "rif": [
+                "ajenna",
+                "ujenna",
+                "deg ujenna"
+            ],
+            "nl": [
+                "boven"
+            ]
+        },
+        {
+            "rif": [
+                "lkar",
+                "di lkar"
+            ],
+            "nl": [
+                "bus"
+            ]
+        },
+        {
+            "rif": [
+                "yeɛdan",
+                "di min yeɛdan"
+            ],
+            "nl": [
+                "verleden"
+            ]
+        },
+        {
+            "rif": [
+                "taddart",
+                "di taddart"
+            ],
+            "nl": [
+                "thuis"
+            ]
+        },
+        {
+            "rif": [
+                "ṭiyara",
+                "di ṭiyara"
+            ],
+            "nl": [
+                "vliegtuig"
+            ]
+        },
+        {
+            "rif": [
+                "tran",
+                "di ṫran"
+            ],
+            "nl": [
+                "trein"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭubis",
+                "di ṭṭubis"
+            ],
+            "nl": [
+                "stadsbus"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭumubin",
+                "di ṭṭumubin (vr.)"
+            ],
+            "nl": [
+                "auto"
+            ]
+        },
+        {
+            "rif": [
+                "diha",
+                "diha"
+            ],
+            "nl": [
+                "daar"
+            ]
+        },
+        {
+            "rif": [
+                "dihanitin",
+                "dihanitin"
+            ],
+            "nl": [
+                "r",
+                "daa"
+            ]
+        },
+        {
+            "rif": [
+                "din",
+                "din"
+            ],
+            "nl": [
+                "daar",
+                "achter"
+            ]
+        },
+        {
+            "rif": [
+                "dinni",
+                "dinni"
+            ],
+            "nl": [
+                "daar",
+                "achter"
+            ]
+        },
+        {
+            "rif": [
+                "djerba",
+                "Djerba"
+            ],
+            "nl": [
+                "djerba"
+            ]
+        },
+        {
+            "rif": [
+                "dujembir",
+                "dujembir"
+            ],
+            "nl": [
+                "december"
+            ]
+        },
+        {
+            "rif": [
+                "dukumuntir",
+                "dukumuntirat",
+                "dukumuntir / dukumuntirat"
+            ],
+            "nl": [
+                "documentaire"
+            ]
+        },
+        {
+            "rif": [
+                "dyaspura",
+                "dyaspura"
+            ],
+            "nl": [
+                "diaspora"
+            ]
+        },
+        {
+            "rif": [
+                "erni",
+                "erni"
+            ],
+            "nl": [
+                "plus"
+            ]
+        },
+        {
+            "rif": [
+                "euro",
+                "Euro"
+            ],
+            "nl": [
+                "euro"
+            ]
+        },
+        {
+            "rif": [
+                "ɛemmars",
+                "ɛemmars"
+            ],
+            "nl": [
+                "nooit"
+            ]
+        },
+        {
+            "rif": [
+                "ɛicrin",
+                "ɛicrin"
+            ],
+            "nl": [
+                "twintig"
+            ]
+        },
+        {
+            "rif": [
+                "fakansi",
+                "fakansi"
+            ],
+            "nl": [
+                "vakantie"
+            ]
+        },
+        {
+            "rif": [
+                "familiyya",
+                "familiya tameẓyant"
+            ],
+            "nl": [
+                "verwanten",
+                "familie"
+            ]
+        },
+        {
+            "rif": [
+                "familiyya",
+                "familiyyat",
+                "familiyya / familiyyat"
+            ],
+            "nl": [
+                "familie"
+            ]
+        },
+        {
+            "rif": [
+                "fariḍennat",
+                "fariḍennat"
+            ],
+            "nl": [
+                "eergisteren"
+            ]
+        },
+        {
+            "rif": [
+                "fartiwecca",
+                "fartiwecca"
+            ],
+            "nl": [
+                "overmorgen"
+            ]
+        },
+        {
+            "rif": [
+                "fas",
+                "Fas"
+            ],
+            "nl": [
+                "fes",
+                "fez"
+            ]
+        },
+        {
+            "rif": [
+                "febrayer",
+                "febrayer"
+            ],
+            "nl": [
+                "februari"
+            ]
+        },
+        {
+            "rif": [
+                "fḥal-es",
+                "fḥal-es"
+            ],
+            "nl": [
+                "thuis"
+            ]
+        },
+        {
+            "rif": [
+                "ficṭa",
+                "ficṭa",
+                "ficṭa / ficṭat"
+            ],
+            "nl": [
+                "feest"
+            ]
+        },
+        {
+            "rif": [
+                "filu",
+                "ifiluten",
+                "filu / ifiluten"
+            ],
+            "nl": [
+                "draad",
+                "band"
+            ]
+        },
+        {
+            "rif": [
+                "firɛawn",
+                "ifirɛawniyen",
+                "Firɛawn / ifirɛawniyen"
+            ],
+            "nl": [
+                "farao"
+            ]
+        },
+        {
+            "rif": [
+                "fln",
+                "FLN"
+            ],
+            "nl": [
+                "front",
+                "libération",
+                "nationale"
+            ]
+        },
+        {
+            "rif": [
+                "fransa",
+                "Fransa"
+            ],
+            "nl": [
+                "frankrijk"
+            ]
+        },
+        {
+            "rif": [
+                "furciṭa",
+                "furciṭat",
+                "furciṭa / furciṭat"
+            ],
+            "nl": [
+                "vork"
+            ]
+        },
+        {
+            "rif": [
+                "fuṭu",
+                "ufuṭu",
+                "ifuṭuten",
+                "fuṭu [u-] / ifuṭuten"
+            ],
+            "nl": [
+                "foto"
+            ]
+        },
+        {
+            "rif": [
+                "zdat",
+                "ɣar zdat"
+            ],
+            "nl": [
+                "naar",
+                "voren"
+            ]
+        },
+        {
+            "rif": [
+                "gaya",
+                "Gaya"
+            ],
+            "nl": [
+                "gaia"
+            ]
+        },
+        {
+            "rif": [
+                "girra",
+                "girrat",
+                "girra / girrat"
+            ],
+            "nl": [
+                "oorlog"
+            ]
+        },
+        {
+            "rif": [
+                "gitarra",
+                "gitarrat",
+                "gitarra / gitarrat"
+            ],
+            "nl": [
+                "gitaar"
+            ]
+        },
+        {
+            "rif": [
+                "ɣmara",
+                "Ɣmara"
+            ],
+            "nl": [
+                "ghmara",
+                "ghomara"
+            ]
+        },
+        {
+            "rif": [
+                "gruppu",
+                "grupput",
+                "gruppu / grupput"
+            ],
+            "nl": [
+                "muziekgroep",
+                "band",
+                "groep"
+            ]
+        },
+        {
+            "rif": [
+                "ɣuct",
+                "ɣuct"
+            ],
+            "nl": [
+                "augustus"
+            ]
+        },
+        {
+            "rif": [
+                "ha",
+                "ha ..... ha. ha ..... d"
+            ],
+            "nl": [
+                "zowel",
+                "als"
+            ]
+        },
+        {
+            "rif": [
+                "aqcic",
+                "Ḥaddu Aqcic"
+            ],
+            "nl": [
+                "akchich"
+            ]
+        },
+        {
+            "rif": [
+                "ḥamid sidi sɛid",
+                "ḥamid",
+                "Ḥamid Sidi Sɛid"
+            ],
+            "nl": [
+                "ḥamid sidi said",
+                "ḥamid",
+                "hamid"
+            ]
+        },
+        {
+            "rif": [
+                "aziz",
+                "Ḥammadi El Aziz"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "ḥasan wis tnayen",
+                "ḥasan",
+                "Ḥasan wis tnayen"
+            ],
+            "nl": [
+                "ḥasan",
+                "hasan"
+            ]
+        },
+        {
+            "rif": [
+                "haya",
+                "haya!"
+            ],
+            "nl": [
+                "oh"
+            ]
+        },
+        {
+            "rif": [
+                "hilikuptir",
+                "hilikuptirat",
+                "hilikuptir / hilikuptirat"
+            ],
+            "nl": [
+                "helikopter"
+            ]
+        },
+        {
+            "rif": [
+                "hirduz",
+                "hirduzat",
+                "hirduz / hirduzat"
+            ],
+            "nl": [
+                "renault",
+                "renault 12",
+                "12"
+            ]
+        },
+        {
+            "rif": [
+                "hirkat",
+                "hirkatat",
+                "hirkat / hirkatat"
+            ],
+            "nl": [
+                "renault",
+                "renault 4",
+                "4"
+            ]
+        },
+        {
+            "rif": [
+                "Hirkulis\t",
+                "Hirkulis"
+            ],
+            "nl": [
+                "hercules"
+            ]
+        },
+        {
+            "rif": [
+                "ḥiṭac",
+                "ḥiṭac"
+            ],
+            "nl": [
+                "elf"
+            ]
+        },
+        {
+            "rif": [
+                "ḥtawami",
+                "ḥtawami"
+            ],
+            "nl": [
+                "totdat"
+            ]
+        },
+        {
+            "rif": [
+                "hulanda",
+                "hulanda"
+            ],
+            "nl": [
+                "holland",
+                "nederland"
+            ]
+        },
+        {
+            "rif": [
+                "ḥuma",
+                "ḥuma ad (+aorist)"
+            ],
+            "nl": [
+                "om"
+            ]
+        },
+        {
+            "rif": [
+                "i",
+                "i"
+            ],
+            "nl": [
+                "en"
+            ]
+        },
+        {
+            "rif": [
+                "i",
+                "i"
+            ],
+            "nl": [
+                "aan",
+                "voor",
+                "van"
+            ]
+        },
+        {
+            "rif": [
+                "i",
+                "i"
+            ],
+            "nl": [
+                "wiens",
+                "wier",
+                "die",
+                "dat"
+            ]
+        },
+        {
+            "rif": [
+                "icten",
+                "ic",
+                "icten"
+            ],
+            "nl": [
+                "een"
+            ]
+        },
+        {
+            "rif": [
+                "idjini",
+                "idjini"
+            ],
+            "nl": [
+                "zojuist"
+            ]
+        },
+        {
+            "rif": [
+                "azeggwaɣ",
+                "Igar azeggwaɣ"
+            ],
+            "nl": [
+                "rode akker",
+                "akker"
+            ]
+        },
+        {
+            "rif": [
+                "iger",
+                "igran",
+                "iger / igran"
+            ],
+            "nl": [
+                "veld",
+                "akker"
+            ]
+        },
+        {
+            "rif": [
+                "imeṣmuden",
+                "Iɣrem n Imeṣmuden"
+            ],
+            "nl": [
+                "ksar ssghir"
+            ]
+        },
+        {
+            "rif": [
+                "ṭurris",
+                "Iɣrem n Ṭurris"
+            ],
+            "nl": [
+                "tourris"
+            ]
+        },
+        {
+            "rif": [
+                "ij",
+                "ij"
+            ],
+            "nl": [
+                "een"
+            ]
+        },
+        {
+            "rif": [
+                "ij",
+                "ij n"
+            ],
+            "nl": [
+                "een"
+            ]
+        },
+        {
+            "rif": [
+                "ijjen"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "iluxen",
+                "maɛlihc",
+                "iluxen maɛlihc"
+            ],
+            "nl": [
+                "probleem"
+            ]
+        },
+        {
+            "rif": [
+                "ircam",
+                "IRCAM"
+            ],
+            "nl": [
+                "ircam"
+            ]
+        },
+        {
+            "rif": [
+                "iṭalya",
+                "uṭalya",
+                "Iṭalya [Iṭ- of Uṭ-]"
+            ],
+            "nl": [
+                "italië"
+            ]
+        },
+        {
+            "rif": [
+                "ityaḍen",
+                "ityaḍen"
+            ],
+            "nl": [
+                "eergisteren"
+            ]
+        },
+        {
+            "rif": [
+                "jjarda",
+                "jjardat",
+                "jjarda / jjardat"
+            ],
+            "nl": [
+                "tuin"
+            ]
+        },
+        {
+            "rif": [
+                "jjit",
+                "jjitat",
+                "jjit / jjitat"
+            ],
+            "nl": [
+                "gîte",
+                "berghut"
+            ]
+        },
+        {
+            "rif": [
+                "kalsu",
+                "ikalsuten",
+                "ikulsa",
+                "kalsu / ikalsuten, ikulsa"
+            ],
+            "nl": [
+                "onderboek",
+                "slip"
+            ]
+        },
+        {
+            "rif": [
+                "kama",
+                "kamat",
+                "kama / kamat"
+            ],
+            "nl": [
+                "bed"
+            ]
+        },
+        {
+            "rif": [
+                "kamariru",
+                "kamarirut",
+                "kamariru / kamarirut"
+            ],
+            "nl": [
+                "ober"
+            ]
+        },
+        {
+            "rif": [
+                "kanada",
+                "Kanada"
+            ],
+            "nl": [
+                "canada"
+            ]
+        },
+        {
+            "rif": [
+                "katakat",
+                "katkatat",
+                "katakat / katkatat"
+            ],
+            "nl": [
+                "vierwielaandrijving"
+            ]
+        },
+        {
+            "rif": [
+                "kilu",
+                "ikiluten",
+                "kilu / ikiluten"
+            ],
+            "nl": [
+                "kilo"
+            ]
+        },
+        {
+            "rif": [
+                "kilumitr",
+                "kilumitrat",
+                "kilumitr / kilumitrat"
+            ],
+            "nl": [
+                "kilometer"
+            ]
+        },
+        {
+            "rif": [
+                "krwasan",
+                "krwasanat",
+                "krwasan / krwasanat"
+            ],
+            "nl": [
+                "croissant"
+            ]
+        },
+        {
+            "rif": [
+                "ktuber",
+                "ktuber"
+            ],
+            "nl": [
+                "oktober"
+            ]
+        },
+        {
+            "rif": [
+                "kucṭa",
+                "kucṭat",
+                "kucṭa / kucṭat"
+            ],
+            "nl": [
+                "kust"
+            ]
+        },
+        {
+            "rif": [
+                "kulci",
+                "kulci"
+            ],
+            "nl": [
+                "heel",
+                "alle"
+            ]
+        },
+        {
+            "rif": [
+                "kumpra",
+                "kumprat",
+                "kumpra / kumprat"
+            ],
+            "nl": [
+                "boodschappen"
+            ]
+        },
+        {
+            "rif": [
+                "kumpyuter",
+                "kumpyutrat",
+                "kumpyuter / kumpyutrat"
+            ],
+            "nl": [
+                "computer"
+            ]
+        },
+        {
+            "rif": [
+                "kuntra",
+                "kuntra"
+            ],
+            "nl": [
+                "tegen"
+            ]
+        },
+        {
+            "rif": [
+                "kuzina",
+                "kuzinat",
+                "kuzina / kuzinat (vr.)"
+            ],
+            "nl": [
+                "keuken"
+            ]
+        },
+        {
+            "rif": [
+                "labas",
+                "labas"
+            ],
+            "nl": [
+                "erg",
+                "ernstig",
+                "goed"
+            ]
+        },
+        {
+            "rif": [
+                "lalla buya",
+                "lalla",
+                "buya",
+                "Lalla Buya"
+            ],
+            "nl": [
+                "lalla buya",
+                "izlan"
+            ]
+        },
+        {
+            "rif": [
+                "lalla mennana",
+                "mennana",
+                "lalla",
+                "Lalla Mennana"
+            ],
+            "nl": [
+                "alla mennana",
+                "mennana",
+                "lalla"
+            ]
+        },
+        {
+            "rif": [
+                "lalla mriqa",
+                "Lalla Mriqa"
+            ],
+            "nl": [
+                "Lalla Mrika"
+            ]
+        },
+        {
+            "rif": [
+                "lalla mriqa",
+                "mriqa",
+                "lalla",
+                "Lalla Mriqa"
+            ],
+            "nl": [
+                "lalla mriqa",
+                "mriqa",
+                "lalla"
+            ]
+        },
+        {
+            "rif": [
+                "larbeɛ",
+                "larbeɛ"
+            ],
+            "nl": [
+                "woensdag"
+            ]
+        },
+        {
+            "rif": [
+                "latar",
+                "latar"
+            ],
+            "nl": [
+                "spoor",
+                "sporen"
+            ]
+        },
+        {
+            "rif": [
+                "lbakur",
+                "lbakur"
+            ],
+            "nl": [
+                "vijgen"
+            ]
+        },
+        {
+            "rif": [
+                "lbinu",
+                "lbinu"
+            ],
+            "nl": [
+                "wijn"
+            ]
+        },
+        {
+            "rif": [
+                "lbiru",
+                "lbirawat",
+                "lbiru / lbirawat"
+            ],
+            "nl": [
+                "bureau",
+                "kantoor"
+            ]
+        },
+        {
+            "rif": [
+                "lebda",
+                "lebda"
+            ],
+            "nl": [
+                "altijd",
+                "vaak"
+            ]
+        },
+        {
+            "rif": [
+                "amerwasi",
+                "lebḥar",
+                "acemlal",
+                "lebḥar acemlal amerwasi"
+            ],
+            "nl": [
+                "middellandse zee",
+                "middellandse"
+            ]
+        },
+        {
+            "rif": [
+                "lebḥar",
+                "lebḥar lebḥar"
+            ],
+            "nl": [
+                "kust"
+            ]
+        },
+        {
+            "rif": [
+                "lmutawessiṭ",
+                "lebḥar",
+                "lebḥar n Lmutawessiṭ"
+            ],
+            "nl": [
+                "middellandse zee",
+                "middellandse"
+            ]
+        },
+        {
+            "rif": [
+                "leɛrayec",
+                "Leɛrayec"
+            ],
+            "nl": [
+                "larache"
+            ]
+        },
+        {
+            "rif": [
+                "lefḍel",
+                "lefḍel idewwel ɣar"
+            ],
+            "nl": [
+                "dankzij",
+                "verdienste"
+            ]
+        },
+        {
+            "rif": [
+                "leḥkayet",
+                "leḥkayat",
+                "leḥkayet / leḥkayat"
+            ],
+            "nl": [
+                "verhaal"
+            ]
+        },
+        {
+            "rif": [
+                "lemṭarba",
+                "lemṭarbat",
+                "lemṭarba / lemṭarbat (v.)"
+            ],
+            "nl": [
+                "bankstel"
+            ]
+        },
+        {
+            "rif": [
+                "leqbayel",
+                "Leqbayel"
+            ],
+            "nl": [
+                "kabylië"
+            ]
+        },
+        {
+            "rif": [
+                "letnayen",
+                "letnayen"
+            ],
+            "nl": [
+                "maandag"
+            ]
+        },
+        {
+            "rif": [
+                "lexxu",
+                "lexxu"
+            ],
+            "nl": [
+                "nu"
+            ]
+        },
+        {
+            "rif": [
+                "lfilm",
+                "lfilmat",
+                "lfilm / lfilmat"
+            ],
+            "nl": [
+                "film"
+            ]
+        },
+        {
+            "rif": [
+                "lgaraj",
+                "lgarajat",
+                "lgaraj / lgarajat"
+            ],
+            "nl": [
+                "garage"
+            ]
+        },
+        {
+            "rif": [
+                "lgaz",
+                "lgazat",
+                "akimawi",
+                "lgaz / lgazat"
+            ],
+            "nl": [
+                "gas",
+                "gifgas"
+            ]
+        },
+        {
+            "rif": [
+                "libya",
+                "Libya"
+            ],
+            "nl": [
+                "libië"
+            ]
+        },
+        {
+            "rif": [
+                "liṣans",
+                "liṣans"
+            ],
+            "nl": [
+                "benzine"
+            ]
+        },
+        {
+            "rif": [
+                "lkalkir",
+                "lkalkir"
+            ],
+            "nl": [
+                "kalk"
+            ]
+        },
+        {
+            "rif": [
+                "lkampu",
+                "lkamput",
+                "lkampu / lkamput"
+            ],
+            "nl": [
+                "platteland"
+            ]
+        },
+        {
+            "rif": [
+                "lkar",
+                "lkiran",
+                "lkar / lkiran"
+            ],
+            "nl": [
+                "streekbus",
+                "bus"
+            ]
+        },
+        {
+            "rif": [
+                "lkas",
+                "lkisan",
+                "lkas / lkisan"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "lkif",
+                "lkif"
+            ],
+            "nl": [
+                "kief",
+                "hennep",
+                "hasj",
+                "hasjiesj"
+            ]
+        },
+        {
+            "rif": [
+                "lkitab",
+                "ddurus",
+                "lkitab n ddurus"
+            ],
+            "nl": [
+                "lesboek",
+                "boek"
+            ]
+        },
+        {
+            "rif": [
+                "lkumundu",
+                "lkumundut",
+                "lkumundu / lkumundut"
+            ],
+            "nl": [
+                "commando-einheid"
+            ]
+        },
+        {
+            "rif": [
+                "lla",
+                "ḷḷa"
+            ],
+            "nl": [
+                "nee"
+            ]
+        },
+        {
+            "rif": [
+                "llan",
+                "llan"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "llant",
+                "llant"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "lleccin",
+                "lleccin"
+            ],
+            "nl": [
+                "sinaasappels",
+                "sinaasappel"
+            ]
+        },
+        {
+            "rif": [
+                "llista",
+                "llista"
+            ],
+            "nl": [
+                "lijst"
+            ]
+        },
+        {
+            "rif": [
+                "llista",
+                "lmakla",
+                "llista n lmakla"
+            ],
+            "nl": [
+                "menukaart",
+                "menu"
+            ]
+        },
+        {
+            "rif": [
+                "lmecc",
+                "lmecc"
+            ],
+            "nl": [
+                "vuurwerk"
+            ]
+        },
+        {
+            "rif": [
+                "lmilicya",
+                "lmilicyat",
+                "lmilicya / lmilicyat"
+            ],
+            "nl": [
+                "militie"
+            ]
+        },
+        {
+            "rif": [
+                "lmuqawama",
+                "lmuqawamat",
+                "lmuqawama / lmuqawamat"
+            ],
+            "nl": [
+                "verzet"
+            ]
+        },
+        {
+            "rif": [
+                "lmuyit",
+                "lmuyit",
+                "lmuyi / lmuyit"
+            ],
+            "nl": [
+                "haven"
+            ]
+        },
+        {
+            "rif": [
+                "lpapa",
+                "lpapa"
+            ],
+            "nl": [
+                "priester",
+                "pater"
+            ]
+        },
+        {
+            "rif": [
+                "lpulis",
+                "lpulis"
+            ],
+            "nl": [
+                "politie"
+            ]
+        },
+        {
+            "rif": [
+                "lqayed",
+                "leider",
+                "lqayed / lquyad"
+            ],
+            "nl": [
+                "leider"
+            ]
+        },
+        {
+            "rif": [
+                "lurdinatur",
+                "lurdinatur"
+            ],
+            "nl": [
+                "computer"
+            ]
+        },
+        {
+            "rif": [
+                "luṭil",
+                "luṭilat",
+                "luṭil / luṭilat"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "lwirata",
+                "lwirata"
+            ],
+            "nl": [
+                "erfgoed"
+            ]
+        },
+        {
+            "rif": [
+                "ma",
+                "ɛad",
+                "ma ɛad"
+            ],
+            "nl": [
+                "nog niet",
+                "nog"
+            ]
+        },
+        {
+            "rif": [
+                "macina",
+                "macinat",
+                "macina / macinat"
+            ],
+            "nl": [
+                "trein"
+            ]
+        },
+        {
+            "rif": [
+                "maɣar",
+                "maɣar"
+            ],
+            "nl": [
+                "waarom"
+            ]
+        },
+        {
+            "rif": [
+                "mala",
+                "ammen",
+                "Mala ammen"
+            ],
+            "nl": [
+                "als"
+            ]
+        },
+        {
+            "rif": [
+                "mali",
+                "Mali"
+            ],
+            "nl": [
+                "mali"
+            ]
+        },
+        {
+            "rif": [
+                "mamek",
+                "mamek"
+            ],
+            "nl": [
+                "hoe"
+            ]
+        },
+        {
+            "rif": [
+                "man",
+                "man"
+            ],
+            "nl": [
+                "welke",
+                "welk"
+            ]
+        },
+        {
+            "rif": [
+                "manaya",
+                "Manaya"
+            ],
+            "nl": [
+                "wat"
+            ]
+        },
+        {
+            "rif": [
+                "manaya",
+                "manaya"
+            ],
+            "nl": [
+                "dit"
+            ]
+        },
+        {
+            "rif": [
+                "manayenni",
+                "Manayenni"
+            ],
+            "nl": [
+                "wat"
+            ]
+        },
+        {
+            "rif": [
+                "manayin",
+                "Manayin"
+            ],
+            "nl": [
+                "wat"
+            ]
+        },
+        {
+            "rif": [
+                "mani",
+                "mani"
+            ],
+            "nl": [
+                "alwaar",
+                "waar"
+            ]
+        },
+        {
+            "rif": [
+                "mani",
+                "mani?"
+            ],
+            "nl": [
+                "waar"
+            ]
+        },
+        {
+            "rif": [
+                "manima",
+                "manima"
+            ],
+            "nl": [
+                "overal"
+            ]
+        },
+        {
+            "rif": [
+                "manis",
+                "manis?"
+            ],
+            "nl": [
+                "waar",
+                "vandaan"
+            ]
+        },
+        {
+            "rif": [
+                "manisma",
+                "manisma"
+            ],
+            "nl": [
+                "waar ook maar",
+                "overal",
+                "waar"
+            ]
+        },
+        {
+            "rif": [
+                "marka",
+                "markat",
+                "marka / markat"
+            ],
+            "nl": [
+                "soort",
+                "merk"
+            ]
+        },
+        {
+            "rif": [
+                "marra",
+                "marra"
+            ],
+            "nl": [
+                "heel",
+                "samen"
+            ]
+        },
+        {
+            "rif": [
+                "mars",
+                "mars"
+            ],
+            "nl": [
+                "maart"
+            ]
+        },
+        {
+            "rif": [
+                "mayemmi",
+                "mayemmi"
+            ],
+            "nl": [
+                "waarom"
+            ]
+        },
+        {
+            "rif": [
+                "mayen",
+                "mayen"
+            ],
+            "nl": [
+                "wat"
+            ]
+        },
+        {
+            "rif": [
+                "mayu",
+                "mayu"
+            ],
+            "nl": [
+                "mei"
+            ]
+        },
+        {
+            "rif": [
+                "mcb",
+                "MCB"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "mekka",
+                "Mekka"
+            ],
+            "nl": [
+                "mekka"
+            ]
+        },
+        {
+            "rif": [
+                "meknas",
+                "Meknas"
+            ],
+            "nl": [
+                "meknes"
+            ]
+        },
+        {
+            "rif": [
+                "melmi",
+                "melmi"
+            ],
+            "nl": [
+                "wanneer"
+            ]
+        },
+        {
+            "rif": [
+                "melmi",
+                "melmi ɣa",
+                "melmi ɣa"
+            ],
+            "nl": [
+                "wanneer",
+                "als"
+            ]
+        },
+        {
+            "rif": [
+                "melmi",
+                "melmi ma",
+                "melmi ma"
+            ],
+            "nl": [
+                "wanneer",
+                "telkens"
+            ]
+        },
+        {
+            "rif": [
+                "melyun",
+                "melyun"
+            ],
+            "nl": [
+                "miljoen"
+            ]
+        },
+        {
+            "rif": [
+                "menɛac",
+                "aseggwas",
+                "yegguren",
+                "menɛac, aseggwas dd yegguren"
+            ],
+            "nl": [
+                "jaar"
+            ]
+        },
+        {
+            "rif": [
+                "merrakec",
+                "Merrakec"
+            ],
+            "nl": [
+                "marrakech"
+            ]
+        },
+        {
+            "rif": [
+                "mersidis",
+                "mersidis mitayn u sebɛa"
+            ],
+            "nl": [
+                "mercedes"
+            ]
+        },
+        {
+            "rif": [
+                "metru",
+                "metru"
+            ],
+            "nl": [
+                "metro"
+            ]
+        },
+        {
+            "rif": [
+                "miked",
+                "miked?"
+            ],
+            "nl": [
+                "wie"
+            ]
+        },
+        {
+            "rif": [
+                "min",
+                "yuɣen",
+                "Min cek yuɣen?"
+            ],
+            "nl": [
+                "wat"
+            ]
+        },
+        {
+            "rif": [
+                "mindeg",
+                "mindeg"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "minxef",
+                "minxef"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "minzi",
+                "minzi"
+            ],
+            "nl": [
+                "omdat",
+                "waardoor",
+                "waarmee"
+            ]
+        },
+        {
+            "rif": [
+                "minzi",
+                "minzi"
+            ],
+            "nl": [
+                "aangezien",
+                "omdat"
+            ]
+        },
+        {
+            "rif": [
+                "minzi",
+                "minzi?"
+            ],
+            "nl": [
+                "waardoor",
+                "waarmee"
+            ]
+        },
+        {
+            "rif": [
+                "miyya",
+                "miyya"
+            ],
+            "nl": [
+                "honderd"
+            ]
+        },
+        {
+            "rif": [
+                "mlilt",
+                "Mlilt"
+            ],
+            "nl": [
+                "melilla"
+            ]
+        },
+        {
+            "rif": [
+                "msa lxir",
+                "msa",
+                "lxir",
+                "Msa lxir"
+            ],
+            "nl": [
+                "goedenavond",
+                "goeienavond"
+            ]
+        },
+        {
+            "rif": [
+                "yemsel",
+                "msel",
+                "messel",
+                "leqcuɛ",
+                "msel leqcuɛ"
+            ],
+            "nl": [
+                "pottenbakken"
+            ]
+        },
+        {
+            "rif": [
+                "mubil",
+                "mubil"
+            ],
+            "nl": [
+                "mobiele telefoon",
+                "mobieltje",
+                "gsm"
+            ]
+        },
+        {
+            "rif": [
+                "mugadur",
+                "Mugadur"
+            ],
+            "nl": [
+                "mogador"
+            ]
+        },
+        {
+            "rif": [
+                "mulud mɛemmri",
+                "mulud",
+                "mɛemmri",
+                "Mulud Mɛemmri"
+            ],
+            "nl": [
+                "mouloud",
+                "mammeri"
+            ]
+        },
+        {
+            "rif": [
+                "musika",
+                "musika"
+            ],
+            "nl": [
+                "muziek"
+            ]
+        },
+        {
+            "rif": [
+                "mutur",
+                "imuturen",
+                "mutur/ imuturen "
+            ],
+            "nl": [
+                "motor",
+                "brommer"
+            ]
+        },
+        {
+            "rif": [
+                "napalm",
+                "napalm"
+            ],
+            "nl": [
+                "napalm"
+            ]
+        },
+        {
+            "rif": [
+                "nbat",
+                "nbat x"
+            ],
+            "nl": [
+                "gedeeld door",
+                "gedeeld"
+            ]
+        },
+        {
+            "rif": [
+                "netnin",
+                "netnint",
+                "netnin (<i>m. </i>), netnint (<i>v.</i>)"
+            ],
+            "nl": [
+                "zij"
+            ]
+        },
+        {
+            "rif": [
+                "netta",
+                "netta"
+            ],
+            "nl": [
+                "hij"
+            ]
+        },
+        {
+            "rif": [
+                "nettat",
+                "nettat"
+            ],
+            "nl": [
+                "zij"
+            ]
+        },
+        {
+            "rif": [
+                "ni",
+                "bu",
+                "ni ..... ni, bu .....bu"
+            ],
+            "nl": [
+                "noch"
+            ]
+        },
+        {
+            "rif": [
+                "nitni",
+                "nitenti",
+                "nitni (<i>m.</i>, nitenti (<i>v.</i>)"
+            ],
+            "nl": [
+                "zij"
+            ]
+        },
+        {
+            "rif": [
+                "nufembir",
+                "nufembir"
+            ],
+            "nl": [
+                "november"
+            ]
+        },
+        {
+            "rif": [
+                "nasyunal",
+                "Parki Nasyunal"
+            ],
+            "nl": [
+                "nationaal"
+            ]
+        },
+        {
+            "rif": [
+                "pasiyyu",
+                "pasiyyu"
+            ],
+            "nl": [
+                "gang"
+            ]
+        },
+        {
+            "rif": [
+                "pasṭila",
+                "pasṭilat",
+                "pasṭila / pasṭilat"
+            ],
+            "nl": [
+                "taart",
+                "bladerdeeg"
+            ]
+        },
+        {
+            "rif": [
+                "pasṭili",
+                "pasṭili"
+            ],
+            "nl": [
+                "koekjes",
+                "koekje"
+            ]
+        },
+        {
+            "rif": [
+                "paṭiyu",
+                "paṭiyut",
+                "paṭiyu / paṭiyut"
+            ],
+            "nl": [
+                "patio"
+            ]
+        },
+        {
+            "rif": [
+                "pista",
+                "pistat",
+                "pista / pistat"
+            ],
+            "nl": [
+                "piste",
+                "onverhard",
+                "weg"
+            ]
+        },
+        {
+            "rif": [
+                "plan",
+                "planat",
+                "plan / planat"
+            ],
+            "nl": [
+                "plan"
+            ]
+        },
+        {
+            "rif": [
+                "playa",
+                "playat",
+                "playa / playat"
+            ],
+            "nl": [
+                "strand"
+            ]
+        },
+        {
+            "rif": [
+                "purtabl",
+                "purtabl"
+            ],
+            "nl": [
+                "mobiele telefoon",
+                "mobieltje",
+                "gsm"
+            ]
+        },
+        {
+            "rif": [
+                "qabu",
+                "qabut",
+                "qabu / qabut"
+            ],
+            "nl": [
+                "stok"
+            ]
+        },
+        {
+            "rif": [
+                "iqelleɛ",
+                "qelleɛ",
+                "ttqelleɛ",
+                "qelleɛ / qelleɛ / ttqelleɛ"
+            ],
+            "nl": [
+                "vertrekken"
+            ]
+        },
+        {
+            "rif": [
+                "rasmi",
+                "rasmi"
+            ],
+            "nl": [
+                "officieel"
+            ]
+        },
+        {
+            "rif": [
+                "s baceklit"
+            ],
+            "nl": [
+                "fiets"
+            ]
+        },
+        {
+            "rif": [
+                "s manayenni minzi"
+            ],
+            "nl": [
+                "daarom"
+            ]
+        },
+        {
+            "rif": [
+                "s manayenni minzi",
+                "manayenni",
+                "minzi",
+                "s manayenni minzi"
+            ],
+            "nl": [
+                "daarom"
+            ]
+        },
+        {
+            "rif": [
+                "tazra",
+                "s tazra"
+            ],
+            "nl": [
+                "snel"
+            ]
+        },
+        {
+            "rif": [
+                "tnayen",
+                "s tnayen"
+            ],
+            "nl": [
+                "allebei",
+                "alletwee"
+            ]
+        },
+        {
+            "rif": [
+                "uceffay",
+                "s uceffay"
+            ],
+            "nl": [
+                "melk"
+            ]
+        },
+        {
+            "rif": [
+                "uyenni",
+                "s uyenni"
+            ],
+            "nl": [
+                "daarom"
+            ]
+        },
+        {
+            "rif": [
+                "ṣala",
+                "ṣalat",
+                "ṣala / ṣalat"
+            ],
+            "nl": [
+                "zaal"
+            ]
+        },
+        {
+            "rif": [
+                "sbeɛṭac",
+                "sbeɛṭac"
+            ],
+            "nl": [
+                "zeventien"
+            ]
+        },
+        {
+            "rif": [
+                "sebɛa",
+                "Sebɛa n Taliwin"
+            ],
+            "nl": [
+                "zevenbronnen"
+            ]
+        },
+        {
+            "rif": [
+                "sebɛin",
+                "sebɛin"
+            ],
+            "nl": [
+                "zeventig"
+            ]
+        },
+        {
+            "rif": [
+                "Sebta",
+                "Sebta"
+            ],
+            "nl": [
+                "Ceuta"
+            ]
+        },
+        {
+            "rif": [
+                "Sellam Arifi",
+                "Sellam",
+                "Arifi",
+                "Sellam Arifi"
+            ],
+            "nl": [
+                "sellam arifi",
+                "sellam",
+                "arifi"
+            ]
+        },
+        {
+            "rif": [
+                "seppitar",
+                "seppitarat",
+                "seppitar / seppitarat"
+            ],
+            "nl": [
+                "ziekenhuis"
+            ]
+        },
+        {
+            "rif": [
+                "iserba",
+                "serba",
+                "ttserba",
+                "serba/i / serba/i / ttserba/i"
+            ],
+            "nl": [
+                "bedienen",
+                "serveren"
+            ]
+        },
+        {
+            "rif": [
+                "seṭṭac",
+                "seṭṭac"
+            ],
+            "nl": [
+                "zestien"
+            ]
+        },
+        {
+            "rif": [
+                "settin",
+                "settin"
+            ],
+            "nl": [
+                "zestig"
+            ]
+        },
+        {
+            "rif": [
+                "budawed",
+                "Sidi Budawed"
+            ],
+            "nl": [
+                "budawed"
+            ]
+        },
+        {
+            "rif": [
+                "sidi buxiyyar",
+                "buxiyyar",
+                "sidi",
+                "Sidi Buxiyyar"
+            ],
+            "nl": [
+                "sidi buxiyya",
+                "buxiyyar",
+                "sidi"
+            ]
+        },
+        {
+            "rif": [
+                "sini",
+                "sinit",
+                "sini / sinit"
+            ],
+            "nl": [
+                "bioscoop",
+                "cinema"
+            ]
+        },
+        {
+            "rif": [
+                "snada",
+                "Snada"
+            ],
+            "nl": [
+                "snada",
+                "senada"
+            ]
+        },
+        {
+            "rif": [
+                "spanya",
+                "Spanya"
+            ],
+            "nl": [
+                "spanje"
+            ]
+        },
+        {
+            "rif": [
+                "ssa",
+                "ssa"
+            ],
+            "nl": [
+                "hier"
+            ]
+        },
+        {
+            "rif": [
+                "ssaniti",
+                "ssaniti"
+            ],
+            "nl": [
+                "hier"
+            ]
+        },
+        {
+            "rif": [
+                "ssardin",
+                "ssardin"
+            ],
+            "nl": [
+                "sardientjes"
+            ]
+        },
+        {
+            "rif": [
+                "ssekwila",
+                "ssekwila"
+            ],
+            "nl": [
+                "school"
+            ]
+        },
+        {
+            "rif": [
+                "issetrina",
+                "ssetrina",
+                "ttsetrina",
+                "ssetrina / ssetrina / ttsetrina"
+            ],
+            "nl": [
+                "trainen",
+                "opleiden"
+            ]
+        },
+        {
+            "rif": [
+                "ssiha",
+                "ssiha"
+            ],
+            "nl": [
+                "van daar",
+                "daar"
+            ]
+        },
+        {
+            "rif": [
+                "ssihaniti",
+                "ssihaniti"
+            ],
+            "nl": [
+                "van daar",
+                "daar"
+            ]
+        },
+        {
+            "rif": [
+                "ssiḥel",
+                "Ssiḥel"
+            ],
+            "nl": [
+                "kust"
+            ]
+        },
+        {
+            "rif": [
+                "ssimanet",
+                "ssimanat",
+                "ssimanet / ssimanat"
+            ],
+            "nl": [
+                "week"
+            ]
+        },
+        {
+            "rif": [
+                "ssin",
+                "ssin"
+            ],
+            "nl": [
+                "van daar",
+                "daar"
+            ]
+        },
+        {
+            "rif": [
+                "ṣṣinaɛa n tgezḍent",
+                "tgezḍent",
+                "ṣṣinaɛa n tgezḍent"
+            ],
+            "nl": [
+                "vlechtwerk",
+                "dwergpalm"
+            ]
+        },
+        {
+            "rif": [
+                "ssinni",
+                "ssinni"
+            ],
+            "nl": [
+                "van daar",
+                "daar"
+            ]
+        },
+        {
+            "rif": [
+                "stiḷu",
+                "stiḷu"
+            ],
+            "nl": [
+                "pen"
+            ]
+        },
+        {
+            "rif": [
+                "sus",
+                "Sus"
+            ],
+            "nl": [
+                "sous"
+            ]
+        },
+        {
+            "rif": [
+                "sustin",
+                "isustinen",
+                "sustin / isustinen"
+            ],
+            "nl": [
+                "beha",
+                "bustehouder"
+            ]
+        },
+        {
+            "rif": [
+                "suyenni",
+                "suyenni"
+            ],
+            "nl": [
+                "daarom"
+            ]
+        },
+        {
+            "rif": [
+                "taccawin n lluz",
+                "taccawin",
+                "lluz",
+                "taccawin n lluz"
+            ],
+            "nl": [
+                "amandelkoekje",
+                "amamdel",
+                "koekje"
+            ]
+        },
+        {
+            "rif": [
+                "taddart n lbaladiyya",
+                "taddart",
+                "lbaladiyya",
+                "Taddart n lbaladiyya"
+            ],
+            "nl": [
+                "stadshuis"
+            ]
+        },
+        {
+            "rif": [
+                "taflamant",
+                "teflamant",
+                "tiflamaniyin",
+                "teflamaniyin",
+                "taflamant [te-] / tiflamaniyin [te-]"
+            ],
+            "nl": [
+                "vlaams",
+                "vlaamse"
+            ]
+        },
+        {
+            "rif": [
+                "tafransist",
+                "tefransist",
+                "tifransisin",
+                "tefransisin",
+                "tafransist [te-] / tifransisin [te-]"
+            ],
+            "nl": [
+                "frans",
+                "française"
+            ]
+        },
+        {
+            "rif": [
+                "tahulandit",
+                "thulandit",
+                "tihulandiyin",
+                "thulandiyin",
+                "tahulandit / tihulandiyin"
+            ],
+            "nl": [
+                "nederlands",
+                "nederlands"
+            ]
+        },
+        {
+            "rif": [
+                "tajerrumt",
+                "tjerrumt",
+                "tijerrumin",
+                "tajerrumt [tj-] / tijerrumin"
+            ],
+            "nl": [
+                "grammatica"
+            ]
+        },
+        {
+            "rif": [
+                "tajiyulujit",
+                "tijiyulujiyin",
+                "tajiyulujit / tijiyulujiyin"
+            ],
+            "nl": [
+                "geologie"
+            ]
+        },
+        {
+            "rif": [
+                "tajiyumurfulujit",
+                "tijiyumurfulujiyin",
+                "tajiyumurfulujit / tijiyumurfulujiyin"
+            ],
+            "nl": [
+                "geomorfologie"
+            ]
+        },
+        {
+            "rif": [
+                "takadimit",
+                "takadimiyin",
+                "takadimit / takadimiyin"
+            ],
+            "nl": [
+                "academie"
+            ]
+        },
+        {
+            "rif": [
+                "talatint",
+                "tilatinin",
+                "Talatint / tilatinin"
+            ],
+            "nl": [
+                "latijn"
+            ]
+        },
+        {
+            "rif": [
+                "talimant",
+                "tlimant",
+                "tilimaniyin",
+                "tlimaniyin",
+                "talimant [tl-] / tilimaniyin [tl-]"
+            ],
+            "nl": [
+                "duits",
+                "duitse"
+            ]
+        },
+        {
+            "rif": [
+                "tambraṭurit",
+                "timbraṭuriyin",
+                "tambraṭurit / timbraṭuriyin"
+            ],
+            "nl": [
+                "imperium",
+                "rijk"
+            ]
+        },
+        {
+            "rif": [
+                "tapa",
+                "tapat",
+                "tapa / tapat"
+            ],
+            "nl": [
+                "tapas"
+            ]
+        },
+        {
+            "rif": [
+                "taqartast",
+                "tqartast",
+                "tiqartasin",
+                "tqartasin",
+                "taqartast [t-]/ tiqartasin [t-]"
+            ],
+            "nl": [
+                "kogeltje",
+                "kogel"
+            ]
+        },
+        {
+            "rif": [
+                "taspanyut",
+                "tespanyut",
+                "tispunya",
+                "tespunya",
+                "taspanyut [te] / tispunya [te-]"
+            ],
+            "nl": [
+                "spaans",
+                "spaanse"
+            ]
+        },
+        {
+            "rif": [
+                "tasyaḍen",
+                "tasyaḍen"
+            ],
+            "nl": [
+                "overmorgen"
+            ]
+        },
+        {
+            "rif": [
+                "taṭumaṭict",
+                "teṭumaṭict",
+                "tiṭumaṭicin",
+                "taṭumaṭict [te-] / tiṭumaṭicin"
+            ],
+            "nl": [
+                "tomaat"
+            ]
+        },
+        {
+            "rif": [
+                "tazewḍa n tiqqit",
+                "tazewḍa",
+                "tiqqit",
+                "Tazewḍa n Tiqqit"
+            ],
+            "nl": [
+                "tzewḍa n tiqqit",
+                "tazewḍa",
+                "tiqqit"
+            ]
+        },
+        {
+            "rif": [
+                "tcuffi",
+                "itcuffiten",
+                "tcuffi / itcuffiten"
+            ],
+            "nl": [
+                "chauffeur"
+            ]
+        },
+        {
+            "rif": [
+                "telṭac",
+                "telṭac"
+            ],
+            "nl": [
+                "dertien"
+            ]
+        },
+        {
+            "rif": [
+                "tenɛac",
+                "tenɛac"
+            ],
+            "nl": [
+                "twaalf"
+            ]
+        },
+        {
+            "rif": [
+                "tesɛin",
+                "tesɛin"
+            ],
+            "nl": [
+                "negentig"
+            ]
+        },
+        {
+            "rif": [
+                "tesɛmiyya",
+                "tesɛmiyya"
+            ],
+            "nl": [
+                "negenhonderd"
+            ]
+        },
+        {
+            "rif": [
+                "tidɣin",
+                "Tidɣin"
+            ],
+            "nl": [
+                "tidghin"
+            ]
+        },
+        {
+            "rif": [
+                "tiṣebḥanin",
+                "tifawin tiṣebḥanin"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "ṫilifun"
+            ],
+            "nl": [
+                "telefoon",
+                "mobieltje",
+                "mobiel",
+                "gsm"
+            ]
+        },
+        {
+            "rif": [
+                "tini",
+                "tini"
+            ],
+            "nl": [
+                "dadels",
+                "dadel"
+            ]
+        },
+        {
+            "rif": [
+                "tinjis",
+                "Tinjis "
+            ],
+            "nl": [
+                "tinjis"
+            ]
+        },
+        {
+            "rif": [
+                "tisi",
+                "tisi"
+            ],
+            "nl": [
+                "vloer"
+            ]
+        },
+        {
+            "rif": [
+                "tisit",
+                "tisit"
+            ],
+            "nl": [
+                "spiegel"
+            ]
+        },
+        {
+            "rif": [
+                "tizi wezzu",
+                "Tizi Wezzu"
+            ],
+            "nl": [
+                "tizi ouzzou"
+            ]
+        },
+        {
+            "rif": [
+                "tlatin",
+                "tlatin"
+            ],
+            "nl": [
+                "dertig"
+            ]
+        },
+        {
+            "rif": [
+                "tmanin",
+                "tmanin"
+            ],
+            "nl": [
+                "tachtig"
+            ]
+        },
+        {
+            "rif": [
+                "tmenṭac",
+                "tmenṭac"
+            ],
+            "nl": [
+                "achttien",
+                "achtien"
+            ]
+        },
+        {
+            "rif": [
+                "tminut",
+                "timinutin",
+                "tminutin",
+                "tminut / timinutin [tm-]"
+            ],
+            "nl": [
+                "minuut"
+            ]
+        },
+        {
+            "rif": [
+                "tran",
+                "ṫran / ṫranat"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "tseɛṭac",
+                "tseɛṭac"
+            ],
+            "nl": [
+                "negentien"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭabu",
+                "ṭṭabut",
+                "ṭṭabu / ṭṭabut"
+            ],
+            "nl": [
+                "taboe"
+            ]
+        },
+        {
+            "rif": [
+                "ttarix",
+                "ttarix"
+            ],
+            "nl": [
+                "geschiedenis",
+                "datum"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭaset",
+                "ṭṭasat",
+                "ṭṭaset / ṭṭasat"
+            ],
+            "nl": [
+                "kopje",
+                "kop",
+                "kom"
+            ]
+        },
+        {
+            "rif": [
+                "ttic aneɣ",
+                "ttic aneɣ"
+            ],
+            "nl": [
+                "is gelijk aan",
+                "gelijk"
+            ]
+        },
+        {
+            "rif": [
+                "ttilibizyun",
+                "ttilibizyunat",
+                "ttilibizyun / ttilibizyunat"
+            ],
+            "nl": [
+                "televisie"
+            ]
+        },
+        {
+            "rif": [
+                "ttiqet",
+                "ttiqet"
+            ],
+            "nl": [
+                "vertrouwen"
+            ]
+        },
+        {
+            "rif": [
+                "ttrabandu",
+                "ttrabandu"
+            ],
+            "nl": [
+                "smokkel"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭubis",
+                "ṭṭubisat",
+                "ṭṭubis (m.) / ṭṭubisat"
+            ],
+            "nl": [
+                "stadsbus",
+                "bus"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭumaṭic",
+                "ṭṭumaṭic"
+            ],
+            "nl": [
+                "tomaten"
+            ]
+        },
+        {
+            "rif": [
+                "ṭṭumubin",
+                "ṭṭumubinat",
+                "ṭṭumubin / ṭṭumubinat"
+            ],
+            "nl": [
+                "auto"
+            ]
+        },
+        {
+            "rif": [
+                "turist",
+                "ṫurist / ṫurist"
+            ],
+            "nl": [
+                "toerist"
+            ]
+        },
+        {
+            "rif": [
+                "ṭurṭiya",
+                "ṭurṭiya"
+            ],
+            "nl": [
+                "tortilla"
+            ]
+        },
+        {
+            "rif": [
+                "U ssalam",
+                "ssalam",
+                "U ssalam!"
+            ],
+            "nl": [
+                "klaar"
+            ]
+        },
+        {
+            "rif": [
+                "udarebbi",
+                "udarebbi"
+            ],
+            "nl": [
+                "misschien"
+            ]
+        },
+        {
+            "rif": [
+                "ufisyil",
+                "ufisyil"
+            ],
+            "nl": [
+                "officieel"
+            ]
+        },
+        {
+            "rif": [
+                "zdat",
+                "ugur ɣar zdat"
+            ],
+            "nl": [
+                "vooruitgaan",
+                "vooruitgang"
+            ]
+        },
+        {
+            "rif": [
+                "uka",
+                "uka"
+            ],
+            "nl": [
+                "uka"
+            ]
+        },
+        {
+            "rif": [
+                "ukazyun",
+                "ukazyun"
+            ],
+            "nl": [
+                "tweedehands auto",
+                "occasion",
+                "auto"
+            ]
+        },
+        {
+            "rif": [
+                "ula",
+                "ula, ula d"
+            ],
+            "nl": [
+                "ook"
+            ]
+        },
+        {
+            "rif": [
+                "umi",
+                "umi"
+            ],
+            "nl": [
+                "wie",
+                "wat"
+            ]
+        },
+        {
+            "rif": [
+                "uruppa",
+                "Uruppa"
+            ],
+            "nl": [
+                "europa"
+            ]
+        },
+        {
+            "rif": [
+                "ussa",
+                "ussa"
+            ],
+            "nl": [
+                "weet",
+                "weten"
+            ]
+        },
+        {
+            "rif": [
+                "viza",
+                "vizat",
+                "viza / vizat"
+            ],
+            "nl": [
+                "visum"
+            ]
+        },
+        {
+            "rif": [
+                "waha",
+                "waha"
+            ],
+            "nl": [
+                "slechts",
+                "alleen maar",
+                "alleen"
+            ]
+        },
+        {
+            "rif": [
+                "waniti",
+                "taniti",
+                "waniti / taniti"
+            ],
+            "nl": [
+                "dit"
+            ]
+        },
+        {
+            "rif": [
+                "wayawya",
+                "wayawya"
+            ],
+            "nl": [
+                "elkaar"
+            ]
+        },
+        {
+            "rif": [
+                "weɛlikum",
+                "ssalam",
+                "weɛlikum ssalam"
+            ],
+            "nl": [
+                "goedendag",
+                "goededag",
+                "goeiedag"
+            ]
+        },
+        {
+            "rif": [
+                "wenni",
+                "tenni",
+                "wenni / tenni "
+            ],
+            "nl": [
+                "dat"
+            ]
+        },
+        {
+            "rif": [
+                "iwert",
+                "wert",
+                "werrt",
+                "wert / wert / werrt"
+            ],
+            "nl": [
+                "erven"
+            ]
+        },
+        {
+            "rif": [
+                "wet di",
+                "wet",
+                "wet di"
+            ],
+            "nl": [
+                "keer",
+                "maal"
+            ]
+        },
+        {
+            "rif": [
+                "wiked",
+                "wiked?"
+            ],
+            "nl": [
+                "wie"
+            ]
+        },
+        {
+            "rif": [
+                "win",
+                "tin",
+                "win / tin"
+            ],
+            "nl": [
+                "dat"
+            ]
+        },
+        {
+            "rif": [
+                "wis",
+                "wis"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "wis ɛicrin"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "wis tnayen"
+            ],
+            "nl": []
+        },
+        {
+            "rif": [
+                "xemsin",
+                "xemsin"
+            ],
+            "nl": [
+                "vijftig"
+            ]
+        },
+        {
+            "rif": [
+                "xemstac",
+                "xemstac"
+            ],
+            "nl": [
+                "vijftien"
+            ]
+        },
+        {
+            "rif": [
+                "xemsṭac",
+                "xemsṭac"
+            ],
+            "nl": [
+                "vijftien"
+            ]
+        },
+        {
+            "rif": [
+                "xetcmini",
+                "xetcmini"
+            ],
+            "nl": [
+                "wanneer"
+            ]
+        },
+        {
+            "rif": [
+                "yalla",
+                "yalla"
+            ],
+            "nl": [
+                "gaan"
+            ]
+        },
+        {
+            "rif": [
+                "yallah",
+                "yallah"
+            ],
+            "nl": [
+                "laten",
+                "laat"
+            ]
+        },
+        {
+            "rif": [
+                "yelli",
+                "yessi",
+                "yelli / yessi"
+            ],
+            "nl": [
+                "dochter"
+            ]
+        },
+        {
+            "rif": [
+                "yennayer",
+                "yennayer"
+            ],
+            "nl": [
+                "januari",
+                "nieuwjaar"
+            ]
+        },
+        {
+            "rif": [
+                "yenni",
+                "tinni",
+                "yenni / tinni"
+            ],
+            "nl": [
+                "dat"
+            ]
+        },
+        {
+            "rif": [
+                "yenni yeqqimen"
+            ],
+            "nl": [
+                "rest"
+            ]
+        },
+        {
+            "rif": [
+                "yesseqsa",
+                "yesseqsa x-ek lxir"
+            ],
+            "nl": [
+                "bedankt"
+            ]
+        },
+        {
+            "rif": [
+                "yina",
+                "tina",
+                "yina / tina"
+            ],
+            "nl": [
+                "dit"
+            ]
+        },
+        {
+            "rif": [
+                "yinin",
+                "tinin",
+                "yinin / tinin"
+            ],
+            "nl": [
+                "dat"
+            ]
+        },
+        {
+            "rif": [
+                "yuɛlan",
+                "yuɛlan qqaɛ"
+            ],
+            "nl": [
+                "hoogste"
+            ]
+        },
+        {
+            "rif": [
+                "yuɛlan",
+                "yuɛlan qqaɛ ktar"
+            ],
+            "nl": [
+                "allerhoogste"
+            ]
+        },
+        {
+            "rif": [
+                "yulin",
+                "yulin"
+            ],
+            "nl": [
+                "opkomend"
+            ]
+        },
+        {
+            "rif": [
+                "yulyuz",
+                "yulyuz"
+            ],
+            "nl": [
+                "juli"
+            ]
+        },
+        {
+            "rif": [
+                "yunyu",
+                "yunyu"
+            ],
+            "nl": [
+                "juni"
+            ]
+        },
+        {
+            "rif": [
+                "yusin",
+                "yusin"
+            ],
+            "nl": [
+                "liggend"
+            ]
+        },
+        {
+            "rif": [
+                "Yussef Alaw",
+                "Yussef Alawi"
+            ],
+            "nl": [
+                "Yousouf Alawi"
+            ]
+        },
+        {
+            "rif": [
+                "zegwami",
+                "zegwami"
+            ],
+            "nl": [
+                "sinds"
+            ]
+        },
+        {
+            "rif": [
+                "lebda",
+                "zi lebda"
+            ],
+            "nl": [
+                "altijd"
+            ]
+        },
+        {
+            "rif": [
+                "sinni",
+                "zi sinni"
+            ],
+            "nl": [
+                "daarvandaan",
+                "vandaan"
+            ]
+        },
+        {
+            "rif": [
+                "ssa",
+                "zi ssa"
+            ],
+            "nl": [
+                "hiervandaan",
+                "vandaan"
+            ]
+        },
+        {
+            "rif": [
+                "ssin",
+                "ssnni",
+                "zi ssin, zi ssinni"
+            ],
+            "nl": [
+                "sindsdien"
+            ]
+        },
+        {
+            "rif": [
+                "ziɣenta",
+                "ziɣenta"
+            ],
+            "nl": [
+                "dus"
+            ]
+        }
+    ],
     "qs": [
         {
             "rif": [
@@ -19477,9 +24342,7 @@ let dic = {
         }
     ]
 }
-
-
-function add(table, input, option){
+function add(thead, table, input, option){
 
     if (option == "root"){
         if (input in dic){
@@ -19503,19 +24366,30 @@ function add(table, input, option){
                 let w = dic[root][s]
 
                 for (r=0; r<w[option].length; r++){
-                    if (input === w[option][r]){
-                        var row = table.insertRow();
-                        var cell = row.insertCell();
-                        var cell2 = row.insertCell();
+                        // if (input === w[option][r]){
+                    if (typeof w[option][r] == "string"){
+                        if (w[option][r].indexOf(input) != -1 || similarity(w[option][r], input) > 0.77){
+                            var row = table.insertRow();
+                            var cell = row.insertCell();
+                            var cell2 = row.insertCell();
 
-                        cell.innerHTML = w[option][r];
-                        cell2.innerHTML =  w[opposite][0] + " (" + w[opposite][w[opposite].length-1] + ")";
-
-                        break;
+                            cell.innerHTML = w[option][r];
+                            cell2.innerHTML =  w[opposite][0] + " (" + w[opposite][w[opposite].length-1] + ")";
+                            
+                            break;
+                        }
+                    } else {
+                        console.log(w[option][r])
                     }
                 }
             }
         }
+    }
+
+    if (option == "nl"){
+        thead.innerHTML = "<tr><th>Nederlands</th><th>Tarifit</th></tr>"
+    } else {
+        thead.innerHTML = "<tr><th>Tarifit</th><th>Nederlands</th></tr>"
     }
 
 }
@@ -19527,9 +24401,12 @@ function tableSearch(option) {
 
     let table = document.getElementById("myTable");
     table.innerHTML = "";
+
+    let thead = document.getElementById("myTableHead");
     
-    add(table, input, option)
+    add(thead, table, input, option)
 }
+
 
 </script>
 

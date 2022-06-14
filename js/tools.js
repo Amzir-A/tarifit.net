@@ -1,8 +1,27 @@
 ///// tarifit.net dict to my dict
-let fic = {}
-    
-    for (k=0; k<dic2.length; k++) {
-        let x = dic2[k]
+let fic = {
+    "no-root": []
+}
+
+for (k=0; k<dic2.length; k++) {
+    let x = dic2[k]
+
+    if (x[0] === "" && x[1] === ""){
+        let exmp_dic = {"rif": [], "nl": []} 
+
+        for (p=2; p<8; p++){
+            if (x[p] != ""){
+                exmp_dic["rif"].push(x[p])
+            }
+        }
+        for (p=9; p<14; p++){
+            if (x[p] != ""){
+                exmp_dic["nl"].push(x[p])
+            }
+        }
+
+        fic["no-root"].push(exmp_dic)
+    } else{
         for (i = 0; i<2; i++){
             if (x[i] != ""){
                 if (!(x[i] in fic)){
@@ -25,7 +44,8 @@ let fic = {}
             }
         }
     }
-    console.log(fic)
+}
+console.log(fic)
 ////////
 
 
