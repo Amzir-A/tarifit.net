@@ -9,6 +9,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
 </head>
 
+<style>
+    .active, .collapsable:hover {
+        background-color:#F8F8F8;
+    }
+  .collapsable-content {
+    display: none;
+    overflow: hidden;
+    background-color:#F0F0F0;
+  }
+  
+
+</style>
+
 <body class="d-flex flex-column min-vh-100">
 
     <header> 
@@ -49,6 +62,15 @@
                 </tr>
               </thead>
                   <tbody id="myTable">
+                    <tr class="collapsable">
+                        <td>Ecc</td>
+                        <td>Eet</td>
+                    </tr>
+                    <tr class="collapsable-content">
+                        <td colspan="2" style="text-align:center;">{ cciɣ, teccid, yecca / tecca, necca, teccam /teccamt, ccan / ccant }</td>
+                    </tr>
+
+                  </tbody>
           </table>
         </div>
      
@@ -24448,6 +24470,28 @@ function tableSearch(option) {
         // show the output:
         tableSearch(selectedOption);
     });
+
+
+
+
+
+
+
+
+    var coll = document.getElementsByClassName("collapsable");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "table-row") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "table-row";
+        }
+    });
+    }
 </script>
 
 
